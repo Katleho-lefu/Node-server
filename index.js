@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose")
-const userRouter = require("./routes/user")
+
+const authRouter = require("./routes/auth")
 
 // Connection to the DB
 mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongodb.net/?retryWrites=true&w=majority")
@@ -14,7 +15,8 @@ mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongo
 
 app.use(express.json());
 
-app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
+
 
 
 
