@@ -7,7 +7,7 @@ const authRouter = require("./routes/auth")
 // Connection to the DB
 mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongodb.net/?retryWrites=true&w=majority")
 .then(()=>{
-    console.log("Connected Successfully")
+    console.log("Connected to MongoDB Successfully")
 })
 .catch((error)=>{
     console.log(error)
