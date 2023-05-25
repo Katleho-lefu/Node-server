@@ -14,6 +14,9 @@ router.post("/register", async (req,res)=> {
     });
 
     try{
+        if (newUser.email === await User.findOne({email: req.body.email})) { // Check if user already exists
+            res.status(500).json("User already exists")
+        }
        const savedUser = await newUser.save();
        res.status(200).json(savedUser);
     }
@@ -32,7 +35,7 @@ router.post("/login", async (req,res) => {
         const OriginalPassword = hashedPassword.toString(CryptoJS.enc.Utf8)
         OriginalPassword !== req.body.password //If passwords don't match
             && res.status(401).json("Wrong credentials!")
-            const accessToken = jwt.sign( //else
+            const accessToken = jwt.sign( //else generate jwt token
             {
                 id: user._id,
                 isAdmin: user.isAdmin

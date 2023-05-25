@@ -27,6 +27,6 @@ app.use("/api/users", UserRouter);
 
 
 //Give app port to run on
-app.listen(5000, ()=> {
+app.listen(3000, ()=> {
     console.log("Backend server is running");
 })
