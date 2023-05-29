@@ -1,38 +1,46 @@
 const router = require("express").Router();
 const Product = require("../models/Product");
-const {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin} = require("./verifyToken")
+const {verifyTokenAndAdmin} = require("./verifyToken")
 
 // Create Product
 router.post("/",verifyTokenAndAdmin, async(req,res)=>{
     const newProduct = new Product(req.body);
-
     try {
       const product = await newProduct.save()
-      res.status(200).json(product); 
-    } 
+      res.status(200).json(product);
+    }
     catch (error) {
         res.status(500).json(error);
     }
 })
 
-
-
 // Get all products
-router.get("/", verifyTokenAndAdmin, async (req,res)=>{
+router.get("/", async (req,res)=>{
+    const qNew = req.query.new;
+    const qCategory = req.query.category;
     try {
-      const users = await User.find();
-      res.status(200).json(users);
+        let products;
+    if(qNew){
+        products = await Product.find().sort({createdAt: -1}).limit(5)
+    }
+    else if(qCategory){
+        products = await Product.find({categories:{
+            $in: [qCategory],
+        }})
+    }
+    else{
+        products = await Product.find()
+    }
     } catch (error) {
         res.status(500).json(err);
     }
 })
 
 // Get One Product
-router.get("/find/:id", verifyTokenAndAdmin, async (req,res)=>{
+router.get("/find/:id", async (req,res)=>{
     try {
-      const user = await User.findById(req.params.id);
-      const {password, ...others} = user._doc
-      res.status(200).json(user);
+      const product = await Product.findById(req.params.id);
+      res.status(200).json(product);
     } catch (error) {
         res.status(500).json(err);
     }
@@ -40,14 +48,11 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req,res)=>{
 
 //Update Product
 router.put("/:id", verifyTokenAndAdmin, async(req,res)=> {
-    if(req.body.password ){
-        req.body.password= CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_ENCRYPTION_KEY).toString()  
-    }
     try {
-       const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+       const updatedProduct = await User.findByIdAndUpdate(req.params.id, {
            $set: req.body
        }, {new: true})
-       res.status(200).json(updatedUser)
+       res.status(200).json(updatedProduct)
     }
     catch (error) {
        res.status(500).json(err);
@@ -57,8 +62,8 @@ router.put("/:id", verifyTokenAndAdmin, async(req,res)=> {
 // Delete Product
 router.delete("/:id", verifyTokenAndAdmin, async (req,res)=>{
     try {
-      await User.findByIdAndDelete(req.params.id);
-      res.status(200).json("User has been deleted");
+      await Product.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted");
     } catch (error) {
         res.status(500).json(err);
     }
