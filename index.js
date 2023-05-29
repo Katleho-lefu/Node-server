@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require("mongoose")
 
 const authRouter = require("./routes/auth")
-const UserRouter = require("./routes/user")
+const userRouter = require("./routes/user")
+const productRouter = require("./routes/product")
 
 // Connection to the DB
 mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongodb.net/?retryWrites=true&w=majority")
@@ -17,7 +18,8 @@ mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongo
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
-app.use("/api/users", UserRouter);
+app.use("/api/users", userRouter);
+app.use("/api/products", productRouter);
 
 
 
