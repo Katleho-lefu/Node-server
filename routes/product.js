@@ -29,7 +29,7 @@ router.get("/", async (req,res)=>{
         }})
     }
     else{
-        products = await Product.find()
+        products = await Product.find();
     }
     } catch (error) {
         res.status(500).json(err);
