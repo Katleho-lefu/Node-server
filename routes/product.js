@@ -31,6 +31,8 @@ router.get("/", async (req,res)=>{
     else{
         products = await Product.find();
     }
+    res.status(200).json(products)
+
     } catch (error) {
         res.status(500).json(err);
     }
@@ -68,12 +70,6 @@ router.delete("/:id", verifyTokenAndAdmin, async (req,res)=>{
         res.status(500).json(err);
     }
 })
-
-// Get Stats about Products
-router.get("/stats", verifyTokenAndAdmin, async (req,res)=>{
-    
-})
-
 
 
 module.exports = router
