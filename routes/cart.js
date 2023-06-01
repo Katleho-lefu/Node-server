@@ -1,6 +1,7 @@
 const router = require("express").Router();
+const { json } = require("express");
 const Cart = require("../models/Cart")
-const {verifyTokenAndAdmin} = require("./verifyToken")
+const {verifyTokenAndAdmin, verifyTokenAndAuthorization} = require("./verifyToken")
 
 
 // Create Cart
@@ -15,47 +16,33 @@ router.post("/",verifyTokenAndAdmin, async(req,res)=>{
     }
 })
 
-// Get all Carts
-router.get("/", async (req,res)=>{
-    const qNew = req.query.new;
-    const qCategory = req.query.category;
+// Get all Carts of all users
+router.get("/", verifyTokenAndAdmin, async(req,res)=>{
     try {
-        let products;
-    if(qNew){
-        products = await Product.find().sort({createdAt: -1}).limit(5)
-    }
-    else if(qCategory){
-        products = await Product.find({categories:{
-            $in: [qCategory],
-        }})
-    }
-    else{
-        products = await Product.find();
-    }
-    res.status(200).json(products)
-
+        const carts = await Cart.find();
+        res.status(200).json(carts)
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 })
 
-// Get One Cart
+// Get User Cart
 router.get("/find/:userId", async (req,res)=>{
     try {
-      const product = await Product.findById(req.params.id);
-      res.status(200).json(product);
+      const cart = await Cart.findOne({userId: req.params.userId});
+      res.status(200).json(cart);
     } catch (error) {
         res.status(500).json(err);
     }
 })
 
 // Update Cart
-router.put("/:id", verifyTokenAndAdmin, async(req,res)=> {
+router.put("/:id", verifyTokenAndAuthorization, async(req,res)=> {
     try {
-       const updatedProduct = await User.findByIdAndUpdate(req.params.id, {
+       const updatedCart = await Cart.findByIdAndUpdate(req.params.id, {
            $set: req.body
        }, {new: true})
-       res.status(200).json(updatedProduct)
+       res.status(200).json(updatedCart)
     }
     catch (error) {
        res.status(500).json(err);
@@ -63,10 +50,10 @@ router.put("/:id", verifyTokenAndAdmin, async(req,res)=> {
 })
 
 // Empty Cart
-router.delete("/:id", verifyTokenAndAdmin, async (req,res)=>{
+router.delete("/:id", verifyTokenAndAuthorization, async (req,res)=>{ // User can delete their own cart
     try {
-      await Product.findByIdAndDelete(req.params.id);
-      res.status(200).json("Product has been deleted");
+      await Cart.findByIdAndDelete(req.params.id);
+      res.status(200).json("Your cart has been deleted");
     } catch (error) {
         res.status(500).json(err);
     }
