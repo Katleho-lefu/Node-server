@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose")
+const port = 3000
 
 const authRouter = require("./routes/auth")
 const userRouter = require("./routes/user")
@@ -27,13 +28,7 @@ app.use("/api/orders", orderRouter);
 
 
 
-
-
-
-
-
-
 //Give app port to run on
-app.listen(3000, ()=> {
-    console.log("Backend server is running");
+app.listen(port, ()=> {
+    console.log(`Backend server is running on port ${port}`);
 })
