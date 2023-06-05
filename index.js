@@ -8,6 +8,7 @@ const userRouter = require("./routes/user")
 const productRouter = require("./routes/product")
 const cartRouter = require("./routes/cart")
 const orderRouter = require("./routes/order")
+const paymentRouter = require("./routes/stripe")
 
 // Connection to the DB
 mongoose.connect("mongodb+srv://Katleholefu18:Password123@cluster0.or6txt5.mongodb.net/?retryWrites=true&w=majority")
@@ -25,6 +26,7 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/payments", paymentRouter);
 
 
 
